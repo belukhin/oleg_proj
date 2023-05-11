@@ -1,87 +1,122 @@
 #include "src.h"
 
-void Gen(Bank * bank)
+Bank::Bank(unsigned int num_of_studs)
 {
+	
 	srand(time(0));
-	int idst = rand() % 9999 + 1;
-	for (int i = 0; i < 10; i++)
-	{
-		bank[i].id = i + idst;
-		bank[i].age = rand() % 72 + 18;
-		bank[i].stsum = (rand() % 5 + 1) * 1000;
-		bank[i].perc = rand() % 12 + 1;
-		bank[i].timenow = rand() % 5 + 1;
-		bank[i].yearprof = bank[i].stsum * bank[i].perc / 100.0;
-		bank[i].nowsum = bank[i].stsum + bank[i].yearprof * bank[i].timenow;
-		bank[i].timeofrepay = rand() % 6 + 7;
-		bank[i].name = FIRST_NAME[rand() % 10] + " " + LAST_NAME[rand() % 10];
-		bank[i].operate = OPS[rand() % 2];
+	timenow = rand() % 5 + 1;
+
+	int id = rand() % 9999 + 1;
+	string name;
+	int age;
+	string operate;
+	int stsum;
+	float perc;
+	float yearprof;
+	int timeofrepay;
+	float nowsum;
+
+	for(int i = 0; i < NUM_OF_STUDS; i++){
+		id += 1;														// id
+		name = FIRST_NAME[rand() % 10] + " " + LAST_NAME[rand() % 10];	// name
+		age = rand() % 72 + 18;											//age
+		operate = OPS[rand() % 2];										// "Dep" or "Cred" - "Deposit" or "Credit"
+		stsum = (rand() % 5 + 1) * 1000;								// Sam - starting amout of money
+		perc = rand() % 12 + 1;											// %
+		yearprof = stsum * perc / 100.0;								// Ppy - profit per year
+		timeofrepay = rand() % 6 + 7;									// time of repay
+		nowsum = stsum + yearprof * timenow;							// Cam - current amount of money
+				
+		studs.push_back(new Stud(id, name, age, operate, stsum, perc, yearprof, timeofrepay, nowsum));
 	}
-	cout << "New data generated" << endl;
+	cout << "the bank has been successfully generated" << endl;
 }
 
-void Print(Bank * bank)
+Bank::~Bank()
+{
+	for (auto s : studs)
+		delete s;
+	studs.clear();
+}
+
+void Bank::Print()
 {
 	cout << "|_______|_______________________|_______|_______|_______|_______|_______|_______|" << endl;
 	cout << "|ID""\t" << "|Name""\t""\t""\t" << "|Age""\t" << "|Op""\t" << "|Sam""\t" << "|%""\t" << "|Ppy""\t" << "|Cam""\t|" << endl;
 	cout << "|_______|_______________________|_______|_______|_______|_______|_______|_______|" << endl;
-	for (int i = 0; i < 10; i++)
+	for(auto s : studs)
 	{
-		cout << "|" << bank[i].id << "\t|" << bank[i].name << "\t|" << bank[i].age << "\t|" << bank[i].operate << "\t|" << bank[i].stsum << "\t|" << bank[i].perc << "\t|" << bank[i].yearprof << "\t|" << bank[i].nowsum << "\t|" << endl;
+		cout << "|" << s->get_id() << "\t|" 
+					<< s->get_name() << "\t|" 
+					<< s->get_age() << "\t|" 
+					<< s->get_operate() << "\t|" 
+					<< s->get_stsum() << "\t|" 
+					<< s->get_perc() << "\t|" 
+					<< s->get_yearprof() << "\t|" 
+					<< s->get_nowsum() << "\t|" 
+			 << endl;
 		cout << "|_______|_______________________|_______|_______|_______|_______|_______|_______|" << endl;
 	}
 }
 
+Stud::Stud(int id, string name, int age, string operate, int stsum, float perc, float yearprof, int timeofrepay, float nowsum)
+{
+	this->id         =id         ;
+	this->name       =name       ;
+	this->age        =age        ;
+	this->operate    =operate    ;
+	this->stsum      =stsum      ;
+	this->perc       =perc       ;
+	this->yearprof   =yearprof   ;
+	this->timeofrepay=timeofrepay;
+	this->nowsum     =nowsum     ;
+}
+
+Stud::~Stud()
+{
+}
+
+/*Menu functions*/
 void Help()
 {
 	cout << "Enter \"commands\" to see list of commands" << endl;
 	cout << "Enter \"titles\" to see help on title of table" << endl;
-	bool incor = false;
 	string choose = " ";
 	cin >> choose;
-	if (choose == "commands")
+	if (choose == "commands" || choose == "c")
 	{
-		cout << "List of commands:" << endl;
-		cout << "gen   - Generate new data" << endl;
-		cout << "print - Show all students' records" << endl;
-		cout << "help  - Show list of commands" << endl;
-		cout << "min   - Show minimum average marks and student with it" << endl;
-		cout << "max   - Show maximum average marks and student with it" << endl;
-		cout << "aa    - Show average age of students" << endl;
-		cout << "exit  - Exit from program" << endl;
-		incor = true;
+		PrintCommands();
+		return;
 	}
-	if (choose == "c")
+	if (choose == "titles" || choose == "t")
 	{
-		cout << "List of commands:" << endl;
-		cout << "gen   - Generate new data" << endl;
-		cout << "print - Show all students' records" << endl;
-		cout << "help  - Show list of commands" << endl;
-		cout << "min   - Show minimum average marks and student with it" << endl;
-		cout << "max   - Show maximum average marks and student with it" << endl;
-		cout << "aa    - Show average age of students" << endl;
-		cout << "exit  - Exit from program" << endl;
-		incor = true;
+		PrintTitles();
+		PrintCommands();
+		return;
 	}
-	if (choose == "titles")
-	{
-		cout << "Op - operation, may be \"Dep\" or \"Cred\" what means \"Deposit\" and \"Credit\"" << endl;
-		cout << "Sam - starting amout of money" << endl;
-		cout << "Ppy - profit per year" << endl;
-		cout << "Cam - current amount of money" << endl;
-		incor = true;
-	}
-	if (choose == "t")
-	{
-		cout << "Op - operation, may be \"Deposit\" or \"Credit\"" << endl;
-		cout << "Sam - starting amout of money" << endl;
-		cout << "Ppy - profit per year" << endl;
-		cout << "Cam - current amount of money" << endl;
-		incor = true;
-	}
-	if (!incor)
-			cout << "Unknown command, returning to main menu" << endl;
+	cout << "Unknown command, returning to main menu" << endl;
 }
+
+inline void PrintTitles(){
+	cout << "Op - operation, may be \"Dep\" or \"Cred\" what means \"Deposit\" and \"Credit\"" << endl;
+	cout << "Sam - starting amout of money" << endl;
+	cout << "Ppy - profit per year" << endl;
+	cout << "Cam - current amount of money" << endl;
+}
+
+inline void PrintCommands(){
+	cout << "\n\n";
+	cout << "List of commands:" << endl;
+	cout << "gen   - Generate new data" << endl;
+	cout << "print - Show all students' records" << endl;
+	cout << "help  - Show list of commands" << endl;
+	cout << "(NA)  min   - Show minimum average marks and student with it" << endl;
+	cout << "(NA)  max   - Show maximum average marks and student with it" << endl;
+	cout << "(NA)  aa    - Show average age of students" << endl;
+	cout << "exit  - Exit from program" << endl;
+}
+
+
 
 /*void Min(Marks * marks)
 {

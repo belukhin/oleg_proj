@@ -7,63 +7,46 @@
 
 using namespace std;
 
-//final
+int MyMenu(Bank* bank){
+	string choose;
+	while (true)
+	{
+		choose.empty();
+		cout << endl;
+		cin >> choose;
+		if (choose == "g" || choose == "generate")
+		{
+			delete bank;
+			bank = new Bank(NUM_OF_STUDS); 
+			PrintCommands();
+			continue;
+		}
+		if (choose == "p" || choose == "print")
+		{
+			bank->Print(); 
+			PrintCommands();
+			continue;
+		}
+		if (choose == "h" || choose == "help")
+		{
+			Help(); continue;
+		}
+		if (choose == "e" || choose == "exit")
+		{
+			cout << "Thanks for using!" << endl;
+			system("pause");
+			return 0;
+		}
+		cout << "Unknown command, try again" << endl;
+	}
+
+	return 0;
+	
+}
 
 int main()
 {
-	Bank bank[NUM_OF_STUDS] = {0};
-	Gen(bank);
+	Bank* bank = new Bank(NUM_OF_STUDS);
 	Help();
-	while (true)
-	{
-		bool incor = false;
-		string choose = " ";
-		cout << endl;
-		cin >> choose;
-		cout << endl;
-		if (choose == "g")
-		{
-			Gen(bank);
-			incor = true;
-		}
-		if (choose == "generate")
-		{
-			Gen(bank);
-			incor = true;
-		}
-		if (choose == "p")
-		{
-			Print(bank);
-			incor = true;
-		}
-		if (choose == "print")
-		{
-			Print(bank);
-			incor = true;
-		}
-		if (choose == "h")
-		{
-			Help();
-			incor = true;
-		}
-		if (choose == "help")
-		{
-			Help();
-			incor = true;
-		}
-		if (choose == "e")
-		{
-			cout << "Thanks for using!" << endl;
-			system("pause");
-			return 0;
-		}
-		if (choose == "exit")
-		{
-			cout << "Thanks for using!" << endl;
-			system("pause");
-			return 0;
-		}
-		if (!incor)
-			cout << "Unknown command, try again" << endl;
-	}
+	return MyMenu(bank);
 }
