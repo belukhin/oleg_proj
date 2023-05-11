@@ -1,11 +1,4 @@
-#include <iostream>
 #include "src.h"
-#include <string>
-#include <cstdlib>
-#include <ctime>
-#include <stdlib.h>
-
-using namespace std;
 
 void Gen(Bank * bank)
 {

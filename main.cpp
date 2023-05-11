@@ -5,8 +5,6 @@
 #include <ctime>
 #include <stdlib.h>
 
-//test test
-
 using namespace std;
 
 int main()
