@@ -7,6 +7,8 @@
 
 using namespace std;
 
+//final
+
 int main()
 {
 	Bank bank[NUM_OF_STUDS] = {0};
